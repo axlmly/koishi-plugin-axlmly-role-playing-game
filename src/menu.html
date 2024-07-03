@@ -1,0 +1,557 @@
+
+        <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色面板</title>
+    <style>
+    @font-face {
+        font-family: "pixel";
+        src: url("D:/test/koishi-app/external/axlmly-role-playing-game/src/font/pixel.ttf") format("truetype");
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #ffffff;
+            background-image: url('D:/test/koishi-app/external/axlmly-role-playing-game/src/img/img.jpg'); /* 设置背景图片 */
+            background-size: cover;  /* 图片覆盖整个背景区域 */
+            background-repeat: no-repeat; /* 不重复图片 */
+            background-position: center center; /* 居中对齐图片 */
+        }
+        .container {
+            padding: 20px; /* 父元素的内边距 */
+        }
+        .profile-card {
+            border-radius: 50px;
+            position: relative;
+            /*width: 100%; !* 适当的宽度 *!*/
+            max-height: 2000px; /* 适当的高度 */
+            background-color: rgba(61, 58, 58, 0.2); /* 背景颜色 */
+            margin: 50px 20px 10px 20px; /* 居中 */
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+        }
+        .title-word {
+            font-size: 80px;
+            text-align: center;
+            color: rgb(0,0,0);
+        }
+        .caption {
+            border-radius: 20px;
+            margin: auto;
+            width: 70%;
+            height: 20px;
+            background-color: rgba(0,0,0,0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .flex-container {
+            display: flex; /* 使用 Flexbox 布局 */
+            justify-content: space-between; /* 在主轴上均匀分布 */
+            align-items: flex-start; /* 在交叉轴上从顶部对齐 */
+            margin-top: 20px; /* 额外的顶部外边距，确保从顶部开始排列 */
+        }
+        .profile-backcard {
+            /*display: flex; !* 使用 Flexbox 布局 *!*/
+            /*justify-content: space-between; !* 在主轴上均匀分布 *!*/
+            align-items: flex-start; /* 在交叉轴上从顶部对齐 */
+            margin: 20px; /* 额外的顶部外边距，确保从顶部开始排列 */
+            padding: 10px;
+            border-radius: 50px;
+            width: 60%; /* 设置不同的宽度，例如 60% */
+            max-height: 900px; /* 适当的高度 */
+            background-color: rgba(255,255,255,0.2); /* 背景颜色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .profile-rightbackcard {
+            /*display: flex; !* 使用 Flexbox 布局 *!*/
+            /*justify-content: space-between; !* 在主轴上均匀分布 *!*/
+            /*align-items: flex-start; !* 在交叉轴上从顶部对齐 *!*/
+            margin: 20px;
+            padding: 10px;
+            border-radius: 50px;
+            width: 35%; /* 设置不同的宽度，例如 35% */
+            max-height: 600px; /* 适当的高度 */
+            background-color: rgba(236, 230, 233, 0.2); /* 背景颜色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .profile-card img {
+            width: 100%;
+        }
+        .avatar {
+            /*margin: 20px 0 0 20px;*/
+            max-width: 262px;
+            max-height: 262px;
+            border-radius: 10px;
+            border: 10px solid #fff;
+            background: #fff;
+        }
+        .level-bar {
+            padding: 40px 0 0 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px; /* 增加图片和进度条之间的间距 */
+        }
+        .level-bar .bar-container {
+            width: 100%;
+            background: rgba(79,76,76,0.23);
+            border-radius: 15px;
+            overflow: hidden;
+            position: static;
+            margin: 10px auto;
+        }
+        .group {
+            width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 15px;
+            padding: 0 20px 0 20px;
+            display: flex;
+            /*align-items: center;*/
+            flex-direction: column;
+            margin: 0 20px 0 0;
+        }
+        .group2 {
+            width: 60%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0.21);
+            border-radius: 15px;
+            padding: 10px 20px 0 0;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            /*margin: 0 20px 20px 0;*/
+        }
+        .group7{
+            max-width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            /*padding: 0 20px 0 0;*/
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            /*gap: 80px; !* 增加图片和进度条之间的间距 *!*/
+        }
+        .group .group7{
+            max-width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            padding: 0 20px 0 0;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 80px; /* 增加图片和进度条之间的间距 */
+        }
+        .group7 .text2{
+            /*max-width: 100%; !* 适当的宽度 *!*/
+            color: #000000;
+            font-size: 40px;
+            gap: 80px; /* 增加图片间距 */
+            padding: 0 0 0 0;
+        }
+        .group3 {
+            max-width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0.21);
+            border-radius: 15px;
+            padding: 5px 0 5px 20px;
+            margin-top: 10px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .group5 {
+            max-width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0.21);
+            border-radius: 15px;
+            padding: 5px 0 5px 20px;
+            margin-top: 10px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .group4 {
+            width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            padding: 0 20px 0 10px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .group2 .group3 {
+            width: 100%; /* 适当的宽度 */
+            height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0);
+            border-radius: 15px;
+            padding: 20px 0 0 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .text-container {
+            padding: 0 20px 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 5px; /* 增加图片和进度条之间的间距 */
+        }
+        .text {
+            /*text-align: center;*/
+            font-family:'pixel';
+            color: #000000;
+            font-size: 45px;
+            padding: 5px;
+            margin: 4px;
+        }
+        .text2 {
+            color: #000000;
+            font-size: 40px;
+            padding: 0 10px 0 0;
+        }
+        .text3 {
+            /*text-align: center;*/
+            width: 100%;
+            height: auto;
+            color: #000000;
+            font-size: 30px;
+            padding: 10px;
+            /*margin: 10px auto;*/
+            overflow: hidden; /* 隐藏溢出内容 */
+            text-overflow: ellipsis; /* 使用省略号表示溢出部分 */
+            /*border: 1px solid #000; !* 可选：添加边框以便更容易看到效果 *!*/
+        }
+        .text4 {
+            color: rgba(0,0,0,0.6);
+            font-size: 24px;
+            padding: 0 10px 0 0;
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .text5 {
+            /*text-align: center;*/
+            font-family:'pixel',serif;
+            width: 100%;
+            height: auto;
+            color: #000000;
+            font-size: 40px;
+            text-align: center;
+            padding: 10px;
+            /*margin: 10px auto;*/
+            overflow: hidden; /* 隐藏溢出内容 */
+            text-overflow: ellipsis; /* 使用省略号表示溢出部分 */
+            /*border: 1px solid #000; !* 可选：添加边框以便更容易看到效果 *!*/
+        }
+        .level-bar .progress {
+            width: calc(67.928%);
+            height: 30px;
+            font-size: 20px;
+            background-color: rgba(255,0,0,0.6);
+            border-radius: 15px;
+            border: 1px solid rgb(255,115,115);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            transition: width 0.3s;
+        }
+        .level-bar .magicpoint {
+            width: calc(28.099%);
+            height: 30px;
+            font-size: 20px;
+            background-color: rgba(0,153,153,0.6);
+            border-radius: 15px;
+            border: 1px solid rgb(92,204,204);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            transition: width 0.3s;
+        }
+        .level-bar .exp {
+            width: calc(89.725%);
+            height: 30px;
+            font-size: 20px;
+            /*margin-bottom: 10px;*/
+            background: rgba(0,193,43,0.6);
+            border-radius: 15px;
+            border: 1px solid rgb(101,224,128);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            transition: width 0.3s;
+        }
+        .name-container {
+            /*padding: 40px 40px 0 40px;*/
+            width: 100%; /* 适当的宽度 */
+            display: flex;
+            align-items: flex-start;
+            gap: 10px; /* 增加图片和进度条之间的间距 */
+        }
+        .name {
+            color: #000000;
+            max-width: 100%; /* 适当的宽度 */
+            font-size: 40px;
+            font-weight: bold;
+            padding: 10px;
+            margin: 0 0 0 40px;
+        }
+        .name2 {
+            color: #000000;
+            max-width: 100%; /* 适当的宽度 */
+            font-size: 40px;
+            font-weight: bold;
+            padding: 10px;
+            margin: 0 0 0 10px;
+        }
+        .kill {
+            color: #000000;
+            font-size: 45px;
+            /*padding: 10px;*/
+            margin: 0 0 0 10%;
+            /*text-align: center;*/
+        }
+        .title {
+            color: #000000;
+            font-size: 40px;
+            padding: 0 0 10px 0;
+            margin: 10px 0 0 0;
+            /*display: flex;*/
+            /*align-items: center;*/
+            text-align: center;
+        }
+        .flex-container1 {
+            display: flex; /* 使用 Flexbox 布局 */
+            justify-content: space-between; /* 在主轴上均匀分布 */
+            align-items: flex-start; /* 在交叉轴上从顶部对齐 */
+            margin: 0 20px 20px 20px;
+        }
+        .profile-card1 {
+            align-items: flex-start; /* 在交叉轴上从顶部对齐 */
+            margin: 0 20px 20px 0; /* 额外的顶部外边距，确保从顶部开始排列 */
+            padding: 10px;
+            border-radius: 50px;
+            width: 60%; /* 设置不同的宽度，例如 60% */
+            max-height: 900px; /* 适当的高度 */
+            background-color: rgba(255,255,255,0.2); /* 背景颜色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .profile-card1 .group7{
+            width: 100%; /* 适当的宽度 */
+            height: 30%; /* 适当的高度 */
+            background-color: rgba(82,80,80,0.3); /* 背景颜色 */
+            border-radius: 15px;
+            padding: 0 0 0 0;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin: 10px 20px 0 20px;
+        }
+        .profile-card1 .text3 {
+            text-align: center;
+            /*width: 100%;*/
+            height: auto;
+            color: #000000;
+            font-size: 25px;
+            padding: 5px;
+            margin-bottom: 5px;
+            /*overflow: hidden; !* 隐藏溢出内容 *!*/
+            /*text-overflow: ellipsis; !* 使用省略号表示溢出部分 *!*/
+            /*border: 1px solid #000; !* 可选：添加边框以便更容易看到效果 *!*/
+        }
+        .profile-card1 .avatar {
+            /*margin: 20px 0 0 20px;*/
+            width: 250px;
+            height: 250px;
+            border-radius: 10px;
+            border: 10px solid #fff;
+            background: #fff;
+        }
+        .profile-card2 {
+            margin: 0 20px 20px 20px;
+            padding: 10px;
+            border-radius: 50px;
+            width: 35%; /* 设置不同的宽度，例如 35% */
+            max-height: 800px; /* 适当的高度 */
+            background-color: rgba(236, 230, 233, 0.2); /* 背景颜色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .profile-card3 {
+            margin: 0 0 20px 20px;
+            padding: 10px;
+            border-radius: 50px;
+            width: 35%; /* 设置不同的宽度，例如 35% */
+            max-height: 600px; /* 适当的高度 */
+            background-color: rgba(236, 230, 233, 0.2); /* 背景颜色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .group6 {
+            /*width: 100%; !* 适当的宽度 *!*/
+            max-height: 50%; /* 适当的高度 */
+            background-color: rgba(82,80,80,0.3); /* 背景颜色 */
+            border-radius: 15px;
+            padding: 0 10px 0 10px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            margin: 10px 20px 0 20px;
+        }
+        .profile-card3 .text {
+            /*text-align: center;*/
+            color: #000000;
+            font-size: 40px;
+            padding: 2px;
+        }
+        .profile-card3 .text-container {
+            padding: 0 20px 0 20px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            /*gap: 20px; !* 增加图片和进度条之间的间距 *!*/
+        }
+        .title-word1 {
+            font-size: 50px;
+            text-align: center;
+            color: rgb(0,0,0);
+        }
+        .caption1 {
+            border-radius: 20px;
+            margin: auto;
+            width: 90%;
+            height: 5px;
+            background-color: rgba(54,52,52,0.6);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+        }
+        .credit {
+            text-align: center;
+            color: #999;
+            font-size: 40px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body id="body">
+    <div class="container">
+        <div class="profile-card">
+            <div class="title-word"><strong>♦Menu♦</strong></div>
+            <div class="caption"></div>
+            <div class="flex-container">
+                <div class="profile-backcard">
+                    <div class="title-word1"><strong>角色状态栏𖨠</strong></div>
+                    <div class="caption1"></div>
+                    <div class="level-bar">
+                        <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="Avatar">
+                        <div class="group2">
+                        <div class="group4">
+                        <div class="text2"><span style="font-family: pixel,serif"><strong>⚬信仰所属⚬<br>雷神难夜</strong></span></div>
+                        </div>
+                        <div class="group3">
+                        <div class="text2">HP❤:<span style="font-family: pixel,serif"><strong>3268/4811</strong></span></div>
+                        <div class="text2">MP◆:<span style="font-family: pixel,serif"><strong>204/726</strong></span></div>
+                        <div class="text2">AP⬤:<span style="font-family: pixel,serif"><strong>0</strong></span></div>
+                        </div>
+                        </div>
+                        <div class="group">
+                        <div class="title"></div>
+                        <div class="group7">
+                        <div class="text2"><span style="font-family: pixel,serif"><strong>Lv▸6</strong></span></div>
+                        <div class="text2"><span style="font-family: pixel,serif"><strong>种族◉:瑟瑞尔水精灵</strong></span></div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="progress"></div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="magicpoint"></div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="exp"></div>
+                        </div>
+                        <div class="text4"><span style="font-family: pixel,serif"><strong>1144/1275✦</strong></span></div>
+                        </div>
+                    </div>
+                    <div class="name-container">
+                    <div class="name">冒险铭牌⛉:<span style="font-family: pixel,serif"><strong>修lepink 『☺』</strong></span></div>
+                    <div class="name2">硬币数✾:<span style="font-family: pixel,serif"><strong>6392</strong></span></div>
+                    <div class="name2">声望值❁:<span style="font-family: pixel,serif"><strong>109</strong></span></div>
+                    <div class="name2">职业🌒:<span style="font-family: pixel,serif"><strong>无业</strong></span></div>
+                    </div>
+                </div>
+                <div class="profile-rightbackcard">
+                    <div class="title-word1"><strong>属性栏⚅</strong></div>
+                    <div class="caption1"></div>
+                    <div class="text-container">
+                        <div class="group3">
+                            <div class="text"><strong>力量:141『100』</strong></div>
+                            <div class="text"><strong>护甲:66『60』</strong></div>
+                            <div class="text"><strong>体质:151『100』</strong></div>
+                            <div class="text"><strong>耐力:49『38』</strong></div>
+                            <div class="text"><strong>智力:121『100』</strong></div>
+                            <div class="text"><strong>敏捷:126『100』</strong></div>
+                        </div>
+                        <div class="group5">
+                            <div class="text"><strong>幸运:126『100』</strong></div>
+                            <div class="text"><strong>信仰:124『100』</strong></div>
+                            <div class="text"><strong>灵性直觉:44『38』</strong></div>
+                            <div class="text"><strong>物理抗性:56『20』</strong></div>
+                            <div class="text"><strong>魔法抗性:16『0』</strong></div>
+                            <div class="text"><strong>击杀数:7</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-container1">
+            <div class="profile-card1">
+            <div class="title-word1"><strong>装备栏⛊</strong></div>
+            <div class="caption1"></div>
+            <div class="text-container">
+                <div class="group7">
+                <div class="text5"><strong>主手武器</strong></div>
+                <img class="avatar" src="D:/test/koishi-app/external/axlmly-role-playing-game/src/img2/未装备.png" alt="Avatar">
+                <div class="text5">【沉默哀嚎】</div>
+                </div>
+                <div class="group7">
+                <div class="text5"><strong>副手武器</strong></div>
+                <img class="avatar" src="D:/test/koishi-app/external/axlmly-role-playing-game/src/img2/未装备.png" alt="Avatar">
+                <div class="text5">【雷霆之刃】</div>
+                </div>
+                <div class="group7">
+                <div class="text5"><strong>盔甲</strong></div>
+                <img class="avatar" src="D:/test/koishi-app/external/axlmly-role-playing-game/src/img2/未装备.png" alt="Avatar">
+                <div class="text5">【未装备衣物】</div>
+                </div>
+            </div>
+            </div>
+            <div class="profile-card2">
+            <div class="title-word1"><strong>技能栏☨</strong></div>
+            <div class="caption1"></div>
+            <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>极寒之风:<br>寒风之力在武器上凝聚寒冷之风斩向敌人,</strong></span></div>
+                </div>
+                <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>极寒之风:<br>寒风之力在武器上凝聚寒冷之风斩向敌人,</strong></span></div>
+                </div>
+                <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>圣灵庇护:<br>神圣的存在给你施加了庇护,</strong></span></div>
+                </div>
+            </div>
+            <div class="profile-card3">
+                <div class="title-word1"><strong>天赋栏♜</strong></div>
+                <div class="caption1"></div>
+                <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>水之治愈:<br>瑟瑞尔水精灵能够利用水元素治愈自身或队友的伤口。</strong></span></div>
+                </div>
+                <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>冰冻之触:<br>瑟瑞尔水精灵能够将水元素转化为冰冻之力，冻结敌人。</strong></span></div>
+                </div>
+                <div class="group6">
+                    <div class="text3"><span style="font-family: pixel,serif"><strong>水遁:<br>瑟瑞尔水精灵能够快速在水中移动，并在水中隐匿身形。</strong></span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <footer class="credit">AXLMLYRPG / AXLMLY</footer>
+</body>
+</html>
+    

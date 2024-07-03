@@ -1,66 +1,417 @@
 
-    <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>决斗日志</title>
-</head>
-<body>
-<div id="container"></div>
-<!-- Include TypeScript file -->
-<script type="text/typescript">
-  interface BattleLog {
-    player1: string;
-    player2: string;
-    action: string;
-    result: string;
-  }
-
-  // 模拟一些对战日志
-  const battleLogs: BattleLog[] = [
-    { player1: '玩家A', player2: '玩家B', action: '攻击', result: '玩家A对玩家B造成了10点伤害' },
-    { player1: '玩家B', player2: '玩家A', action: '反击', result: '玩家B对玩家A造成了5点伤害' },
-    { player1: '玩家A', player2: '玩家B', action: '使用技能', result: '玩家A使用技能回复了10点生命值' },
-    { player1: '玩家B', player2: '玩家A', action: '使用技能', result: '玩家B使用技能增加了5点防御' },
-    // 你可以添加更多的日志
-  ];
-
-  // 获取容器元素
-  const container = document.getElementById('container');
-
-  if (container) {
-    // 使用 for 循环动态添加元素
-    for (let i = 0; i < battleLogs.length; i++) {
-      const log = battleLogs[i];
-      // 创建一个新的 div 元素
-      const newDiv = document.createElement('div');
-      // 设置 div 的内容
-      newDiv.innerHTML = `
-        <p><strong>第 ${i + 1} 回合</strong></p>
-        <p>${log.player1} 对 ${log.player2} 发起了 ${log.action}</p>
-        <p>结果: ${log.result}</p>
-        <hr>
-      `;
-      // 将新的 div 添加到容器中
-      container.appendChild(newDiv);
-    }
-  }
-</script>
-<script src="https://unpkg.com/typescript@latest/lib/typescript.js"></script>
-<script>
-  (function () {
-    // Configure TypeScript
-    const ts = window.ts;
-    const sourceCode = document.querySelector('script[type="text/typescript"]').textContent;
-    const result = ts.transpileModule(sourceCode, {
-      compilerOptions: { module: ts.ModuleKind.ESNext }
-    });
-    const script = document.createElement('script');
-    script.text = result.outputText;
-    document.body.appendChild(script);
-  })();
-</script>
-</body>
-</html>
+      <!DOCTYPE html>
+      <html lang="zh-cn">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>决斗日志</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #ffffff;
+            background-image: url('D:/test/koishi-app/external/axlmly-role-playing-game/src/img/img2.png'); /* 设置背景图片 */
+            background-size: cover;  /* 图片覆盖整个背景区域 */
+            /*background-repeat: no-repeat; !* 不重复图片 *!*/
+            background-position: center center; /* 居中对齐图片 */
+          }
+          .container {
+            padding: 20px;
+          }
+          .profile-card {
+            border-radius: 50px;
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            background-color: rgba(61, 58, 58, 0.2);
+            margin: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          }
+          .battle-log {
+            margin-bottom: 5px;
+          }
+          .game-over {
+            color: red;
+            font-weight: bold;
+          }
+          .caption1 {
+            border-radius: 20px;
+            margin: auto;
+            width: 90%;
+            height: 5px;
+            background-color: rgba(54,52,52,0.6);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+          .title-word1 {
+            font-size: 50px;
+            text-align: center;
+            color: rgb(0,0,0);
+          }
+          .avatar {
+            max-width: 262px;
+            max-height: 262px;
+            border-radius: 5px;
+            border: 5px solid #fff;
+            background: #fff;
+          }
+          .center {
+            font-size: 20px;
+            text-align: center;
+            color: rgb(0,0,0);
+          }
+          .group {
+            max-width: 100%; /* 适当的宽度 */
+            max-height: 60%; /* 适当的高度 */
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 15px;
+            /*padding: 0 20px 0 20px;*/
+            display: flex;
+            /*align-items: center;*/
+            flex-direction: column;
+            margin: 0 10px 0 10px;
+          }
+          .group1 {
+            max-width: 95%; /* 适当的宽度 */
+            display: flex;
+            align-items: flex-start;
+            flex-direction: row;
+            padding: 10px 20px 10px 20px;
+            margin: 2px 10px 2px 10px;
+            background-color: rgba(65,60,62,0.21); /* 背景颜色 */
+            border-radius: 15px;
+            gap: 10px;
+          }
+          .group2 {
+            max-width: 95%; /* 适当的宽度 */
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: flex-start;
+            padding: 10px 20px 10px 20px;
+            margin: 2px 10px 2px 10px;
+            background-color: rgba(65,60,62,0.21); /* 背景颜色 */
+            border-radius: 15px;
+            gap: 10px;
+          }
+          .group4 {
+            max-width: 20%; /* 适当的宽度 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding: 10px 20px 10px 20px;
+            margin: 0 0 10px 0;
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 10px;
+            white-space: nowrap; /* 添加这行，如果你希望不换行 */
+          }
+          .group5 {
+            max-width: 20%; /* 适当的宽度 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 20px 10px 20px;
+            margin: 0 0 10px 0;
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 10px;
+            white-space: nowrap; /* 添加这行，如果你希望不换行 */
+          }
+          .group6 {
+            max-width: 70%; /* 适当的宽度 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 20px 10px 20px;
+            margin: 0 auto;
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 10px;
+            word-wrap: break-word; /* 添加这行 */
+            word-break: break-all; /* 添加这行 */
+          }
+          .group7 {
+            max-width: 70%; /* 适当的宽度 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 20px 10px 20px;
+            margin: 0 auto;
+            background-color: rgba(236,230,233,0.21); /* 背景颜色 */
+            border-radius: 10px;
+          }
+          .avatar {
+            /*margin: 20px 0 0 20px;*/
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 10px solid #fff;
+            background: #fff;
+        }
+        .credit {
+            text-align: center;
+            color: #171515;
+            font-size: 20px;
+            padding: 10px;
+        }
+        </style>
+      </head>
+      <body id="body">
+        <div class="container">
+          <div class="profile-card">
+            <div class="title-word1"><strong>战斗日志栏</strong></div>
+            <div class="caption1"></div>
+            <div id="container">
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 1 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group5">
+                <div>暗夜伯特</div>
+                <div>HP:702</div>
+                <div>MP:31</div>
+              </div>
+              <div class="group7">暗夜伯特选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group4">
+                <div>修lepink</div>
+                <div>HP:3850</div>
+                <div>MP:276</div>
+              </div>
+              <div class="group6">结果:暴击!暗夜伯特对修lepink使用雷霆风暴,雷电与风暴交织在一起释放毁灭性的雷霆风暴,造成了380点伤害</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 2 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group5">
+                <div>修lepink</div>
+                <div>HP:3850</div>
+                <div>MP:282</div>
+              </div>
+              <div class="group7">修lepink选择使用 武器攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group4">
+                <div>暗夜伯特</div>
+                <div>HP:581</div>
+                <div>MP:31</div>
+                </div class="group4">
+                <div class="group6">结果:修lepink对暗夜伯特挥舞雷霆之刃进行斩击,造成了121点伤害</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 3 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group5">
+                <div>暗夜伯特</div>
+                <div>HP:581</div>
+                <div>MP:37</div>
+              </div>
+              <div class="group7">暗夜伯特选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group4">
+                <div>修lepink</div>
+                <div>HP:3619</div>
+                <div>MP:282</div>
+              </div>
+              <div class="group6">结果:因玛娜耗尽,暗夜伯特对修lepink挥舞烈焰长枪进行斩击,造成了231点伤害;</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 4 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group5">
+                <div>修lepink</div>
+                <div>HP:3619</div>
+                <div>MP:288</div>
+              </div>
+              <div class="group7">修lepink选择使用 武器攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group4">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:37</div>
+                </div class="group4">
+                <div class="group6">结果:修lepink对暗夜伯特挥舞雷霆之刃进行斩击,造成了124点伤害</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 5 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group5">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:43</div>
+              </div>
+              <div class="group7">暗夜伯特选择使用 武器攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group4">
+                <div>修lepink</div>
+                <div>HP:3454</div>
+                <div>MP:288</div>
+              </div>
+              <div class="group6">结果:暗夜伯特对修lepink挥舞雷霆之刃进行斩击,造成了165点伤害</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 6 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group5">
+                <div>修lepink</div>
+                <div>HP:4011</div>
+                <div>MP:184</div>
+              </div>
+              <div class="group7">修lepink选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group4">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:43</div>
+                </div class="group4">
+                <div class="group6">结果:修lepink使用圣灵庇护,神圣的存在给你施加了庇护,恢复了557点HP</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 7 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group5">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:9</div>
+              </div>
+              <div class="group7">暗夜伯特选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group4">
+                <div>修lepink</div>
+                <div>HP:3753</div>
+                <div>MP:184</div>
+              </div>
+              <div class="group6">结果:暴击!暗夜伯特对修lepink使用圣殿神剑,神剑上凝聚着圣殿的神圣之力释放神圣的圣殿之剑,造成了258点伤害</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 8 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group5">
+                <div>修lepink</div>
+                <div>HP:4645</div>
+                <div>MP:80</div>
+              </div>
+              <div class="group7">修lepink选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group4">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:9</div>
+                </div class="group4">
+                <div class="group6">结果:大祝福! 修lepink使用圣灵庇护,神圣的存在给你施加了庇护,恢复了892点HP</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 9 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group5">
+                <div>暗夜伯特</div>
+                <div>HP:457</div>
+                <div>MP:15</div>
+              </div>
+              <div class="group7">暗夜伯特选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group4">
+                <div>修lepink</div>
+                <div>HP:4194</div>
+                <div>MP:80</div>
+              </div>
+              <div class="group6">结果:暴击!因玛娜耗尽,暗夜伯特对修lepink挥舞烈焰长枪进行斩击,造成了451点伤害;</div>
+            </div>
+          </div>
+        </div>
+      <hr>
+        <div class="battle-log">
+          <div class="group">
+            <div class="center"><strong>第 10 回合</strong></div>
+            <div class="caption1"></div>
+            <div class="group1">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=1206147964&spec=640" alt="修lepink">
+              <div class="group5">
+                <div>修lepink</div>
+                <div>HP:4194</div>
+                <div>MP:86</div>
+              </div>
+              <div class="group7">修lepink选择使用 技能攻击</div>
+            </div>
+            <div class="group2">
+              <img class="avatar" src="http://q.qlogo.cn/headimg_dl?dst_uin=2922674617&spec=640" alt="暗夜伯特">
+              <div class="group4">
+                <div>暗夜伯特</div>
+                <div>HP:-108</div>
+                <div>MP:15</div>
+                </div class="group4">
+                <div class="group6">结果:暴击! 挥舞雷霆之刃进行斩击,造成了565点伤害</div>
+            </div>
+          </div>
+        </div>
+      <div class="credit"><strong>暗夜伯特 被击败了!</strong></div><hr></div>
+          </div>
+        </div>
+        <footer class="credit">AXLMLYRPG / AXLMLY</footer>
+      </body>
+      </html>
     

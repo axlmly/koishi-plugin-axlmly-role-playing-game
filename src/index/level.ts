@@ -8,8 +8,8 @@ export interface LevelInfo {
 
 
   export const levelInfos: LevelInfo[] = [
-    {level: 0, level_line: 0},
-    {level: 1, level_line: 100},
+    {level: 0, level_line: 100},
+    {level: 1, level_line: 120},
     {level: 2, level_line: 220},
     {level: 3, level_line: 350},
     {level: 4, level_line: 545},

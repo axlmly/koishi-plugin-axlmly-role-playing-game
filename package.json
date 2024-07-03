@@ -1,22 +1,38 @@
 {
   "name": "koishi-plugin-axlmly-role-playing-game",
   "description": "",
-  "version": "0.0.1",
+  "version": "1.0.64",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
+  "koishi": {
+    "browser": true,
+    "description": {
+      "en": "AXLMLYRPG",
+      "zh": "AXLMLYRPG,一款能在群聊互殴决斗的游戏娱乐插件(暂处于开发测试中,请及时更新),有问题在非官方交流群提问at | AXLMLY"
+    },
+    "service": {
+      "required": [
+        "puppeteer",
+        "database",
+        "jrysmaxs"
+      ],
+      "implements": [
+        "axlmlyrpg"
+      ]
+    }
+  },
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "game"
   ],
-  "devDependencies": {},
   "peerDependencies": {
-    "koishi": "^4.17.8"
+    "koishi": "^4.17.9"
   }
 }
