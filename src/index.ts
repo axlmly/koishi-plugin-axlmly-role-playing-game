@@ -1958,7 +1958,7 @@ export function apply(ctx: Context, config: Config) {
           return `你没有ID为${id}的技能`;
         }
         if(status1 === 1){
-          return `处于止战状态无法使用技能`
+          return `对方还未死亡`
         }
         if(option.types !== 4){
           return `该技能不属于复活术种类`

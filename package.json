@@ -1,13 +1,18 @@
 {
   "name": "koishi-plugin-axlmly-role-playing-game",
   "description": "",
-  "version": "1.0.64",
+  "version": "1.0.67",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
+  "homepage": "https://github.com/axlmly/koishi-plugin-axlmly-role-playing-game.git",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:axlmly/koishi-plugin-axlmly-role-playing-game.git"
+  },
   "koishi": {
     "browser": true,
     "description": {

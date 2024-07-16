@@ -366,7 +366,7 @@ export const armourJson = [
     "intelligence": 0,
     "faith": 0,
     "attack": 30,
-    "armourclass": 1000,
+    "armourclass": 100,
     "physicaldefense": 10,
     "magicdefense": 10,
   },

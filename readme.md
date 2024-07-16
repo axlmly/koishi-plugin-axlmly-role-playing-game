@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://github.com/initialencounter/mykoishi">
+  <a href="https://github.com/axlmly">
     <a href="https://koishi.chat/" target="_blank">
     <img width="160" src="https://koishi.chat/logo.png" alt="logo">
   </a>
