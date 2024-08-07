@@ -250,7 +250,7 @@ export class menuHtml{
         name = sessions.user.name
       }
     }
-    name = name.length>8? name.substring(0, 8 - 1) + '…' : name;
+    name = name.length>8? name.substring(0, 6 - 1) + '…' : name;
     let statuscd = (await ctx.database.get('role_playing_game_cd', { id: String(sessions.userId) }))[0]?.status //决斗cd
     let status
     if(getrpgjson.status === 1){
@@ -734,7 +734,7 @@ export class menuHtml{
                         </div>
                     </div>
                     <div class="name-container">
-                    <div class="name">冒险铭牌⛉:<span style="font-family: pixel,serif"><strong>${name} 『${status}』</strong></span></div>
+                    <div class="name">铭牌⛉:<span style="font-family: pixel,serif"><strong>${name} 『${status}』</strong></span></div>
                     <div class="name2">硬币数✾:<span style="font-family: pixel,serif"><strong>${coins}</strong></span></div>
                     <div class="name2">声望值❁:<span style="font-family: pixel,serif"><strong>${kudos}</strong></span></div>
                     <div class="name2">职业🌒:<span style="font-family: pixel,serif"><strong>${getProfessionName}</strong></span></div>

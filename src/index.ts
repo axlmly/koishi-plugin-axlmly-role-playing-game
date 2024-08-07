@@ -31,6 +31,7 @@ export interface Config {
   battlestatecd: number,
   skillcd: number,
   maxSize: number,
+  gradegap: number,
 }
 
 export const Config: Schema<Config> = Schema.object({
@@ -80,6 +81,9 @@ export const Config: Schema<Config> = Schema.object({
   signinexp: Schema.number().role('')
     .min(1).max(9999).step(1).default(200)
     .description('签到获得的经验数量最低浮动上限'),
+  gradegap: Schema.number().role('')
+    .min(1).max(100).step(1).default(5)
+    .description('最低等级差距'),
   logger: Schema.boolean().default(false)
     .description('是否开启日志'),
 })
@@ -570,7 +574,7 @@ export function apply(ctx: Context, config: Config) {
       if(duels === 0){
         return `无主动决斗次数`
       }
-      if(level1 - level2 > 5){
+      if(level1 - level2 > config.gradegap){
         return `对方等级过低`
       }
       let time =  Time.template('yyyy-MM-dd hh:mm:ss', new Date());
@@ -657,14 +661,16 @@ export function apply(ctx: Context, config: Config) {
       const hppercent2 = Math.round(gethp2 / gethpend2) * 100
 
       // const experience1 = 100
-      let coins1 = Math.floor(getcs1 * 0.2)
-      let coins2 = Math.floor(getcs2 * 0.2)
+      let coins1:number
+      let coins2:number
       let experience2: number
       let experience3: number
       let experience4: number
       let experience5: number
       let cs1: number
       let cs2: number
+      //lv2 getcs1 是被回复者
+      //lv1 getcs2 是回复者
       if(level2 < 10){
         experience2 = 200
         cs1 = 30
@@ -733,46 +739,48 @@ export function apply(ctx: Context, config: Config) {
         experience4 = experience2
       }
 
+      //lv2 getcs1 是被回复者
+      //lv1 getcs2 是回复者
       if(level1 < 10){
         experience3 = 200
         cs2 = 30
-        coins2 = Math.floor(getcs1 * 0.05)
+        coins2 = Math.floor(getcs2 * 0.05)
       }else if(level1 < 20){
         experience3 = 400
         cs2 = 35
-        coins2 = Math.floor(getcs1 * 0.1)
+        coins2 = Math.floor(getcs2 * 0.1)
       }else if(level1 < 30){
         experience3 = 800
         cs2 = 40
-        coins2 = Math.floor(getcs1 * 0.13)
+        coins2 = Math.floor(getcs2 * 0.13)
       }else if(level1 < 40){
         experience3 = 1600
         cs2 = 45
-        coins2 = Math.floor(getcs1 * 0.15)
+        coins2 = Math.floor(getcs2 * 0.15)
       }else if(level1 < 50){
         experience3 = 3200
         cs2 = 50
-        coins2 = Math.floor(getcs1 * 0.17)
+        coins2 = Math.floor(getcs2 * 0.17)
       }else if(level1 < 60){
         experience3 = 6400
         cs2 = 55
-        coins2 = Math.floor(getcs1 * 0.2)
+        coins2 = Math.floor(getcs2 * 0.2)
       }else if(level1 < 70){
         experience3 = 12800
         cs2 = 60
-        coins2 = Math.floor(getcs1 * 0.23)
+        coins2 = Math.floor(getcs2 * 0.23)
       }else if(level1 < 80){
         experience3 = 23600
         cs2 = 65
-        coins2 = Math.floor(getcs1 * 0.25)
+        coins2 = Math.floor(getcs2 * 0.25)
       }else if(level1 < 90){
         experience3 = 47200
         cs2 = 70
-        coins2 = Math.floor(getcs1 * 0.27)
+        coins2 = Math.floor(getcs2 * 0.27)
       }else if(level1 < 100){
         experience3 = 94400
         cs2 = 75
-        coins2 = Math.floor(getcs1 * 0.3)
+        coins2 = Math.floor(getcs2 * 0.3)
       }else{
         experience3 = 0
         cs2 = 0
@@ -812,9 +820,9 @@ export function apply(ctx: Context, config: Config) {
 
         const killnumber = (await ctx.database.get('role_playing_game', { id: String(session.userId) }))[0]?.killnumber; //击杀统计
         // let coins1 = Math.floor(getcoins1 * 0.2)
-        if(coins1 <= 0){
+        if(getcoins1 - coins1 <= 0){
           coins1 = 0
-        }else if(coins1 >= 200){
+        }else if(getcoins1 - coins1 >= 200){
           coins1 = 200
         }
         await ctx.database.upsert('role_playing_game', [{
@@ -879,17 +887,17 @@ export function apply(ctx: Context, config: Config) {
         let getmagicpointEnd2 = (await ctx.database.get('role_playing_game', { id: String(session.quote.user.id) }))[0]?.magicpointEnd; //最终魔力值
         let healthpointEnd2 = (await ctx.database.get('role_playing_game', { id: String(session.quote.user.id) }))[0]?.healthpointEnd; //最终生命值
         // let coins1 = Math.floor(getcoins1*0.2)
-        if(coins1 <= 0){
-          coins1 = 0
-        }else if(coins1 >= 200){
-          coins1 = 200
+        if(getcoins1 - coins2 <= 0){
+          coins2 = 0
+        }else if(getcoins1 - coins2 >= 200){
+          coins2 = 200
         }
         await ctx.database.upsert('role_playing_game', [{
           id: String(session.userId),
           healthpoint: 0,
           magicpoint: 0,
           status: 0,
-          coins: getcoins1 - coins1
+          coins: getcoins1 - coins2
         }])
         await ctx.database.upsert('role_playing_game_cd',[{
           id: String(session.userId),
@@ -901,7 +909,7 @@ export function apply(ctx: Context, config: Config) {
               id: String(session.quote.user.id),
               healthpoint: healthpointEnd2,
               magicpoint: getduelshtml.player1mp,
-              coins: getcoins2 + cs2 + coins1,
+              coins: getcoins2 + cs2 + coins2,
               experiencepoint: getexperiencepoint2 + experience4,
               killnumber: killnumber + 1
             }])
@@ -910,7 +918,7 @@ export function apply(ctx: Context, config: Config) {
               id: String(session.quote.user.id),
               healthpoint: getduelshtml.player1hp,
               magicpoint: getmagicpointEnd2,
-              coins: getcoins2 + cs2 + coins1,
+              coins: getcoins2 + cs2 + coins2,
               experiencepoint: getexperiencepoint2 + experience4,
               killnumber: killnumber + 1
             }])
@@ -919,7 +927,7 @@ export function apply(ctx: Context, config: Config) {
               id: String(session.quote.user.id),
               healthpoint: healthpointEnd2,
               magicpoint: getmagicpointEnd2,
-              coins: getcoins2 + cs2 + coins1,
+              coins: getcoins2 + cs2 + coins2,
               experiencepoint: getexperiencepoint2 + experience4,
               killnumber: killnumber + 1
             }])
@@ -929,13 +937,13 @@ export function apply(ctx: Context, config: Config) {
             id: String(session.quote.user.id),
             healthpoint: getduelshtml.player1hp,
             magicpoint: getduelshtml.player1mp,
-            coins: getcoins2 + cs2 + coins1,
+            coins: getcoins2 + cs2 + coins2,
             experiencepoint: getexperiencepoint2 + experience4,
             killnumber: killnumber + 1
           }])
         }
         await sixedsrrayservice.addElement(session.userId, session.quote)
-        session.send(`这场战斗中,${session.username}被${name}击杀,${name}获得${30 + coins1}硬币与${experience4}经验值.`)
+        session.send(`这场战斗中,${session.username}被${name}击杀,${name}获得${30 + coins2}硬币与${experience4}经验值.`)
         return msg;
       }else{
         const getHealthpoint1 = (await ctx.database.get('role_playing_game', { id: String(session.quote.user.id) }))[0]?.healthpoint; //生命值
