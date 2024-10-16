@@ -263,7 +263,8 @@ export function apply(ctx: Context, config: Config) {
     .action(async ({session}) => {
       await rpgdata.userdata(session,ctx)
       // const jsonString = JSON.stringify(getrpgjson);
-      const menuPath = path.resolve(__dirname, "./menu.html");
+      // const path = require('path');
+      const menuPath = path.join(__dirname, "menu.html");
       let page;
       const getMenu = await menu.menuimg(session,config,ctx)
       const getHttpContent = getMenu.httpContent
@@ -626,7 +627,7 @@ export function apply(ctx: Context, config: Config) {
       if(name.length <= 0){
         name = session.quote.user.name
       }
-      const duelsPath = path.resolve(__dirname, "./duelshtml.html");
+      const duelsPath = path.join(__dirname, "duelshtml.html");
       let page;
       const getduelshtml = await duelshtml.getDuelsHtml(session,config,ctx)
       const getHttpContent = getduelshtml.htmlContent
